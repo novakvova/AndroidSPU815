@@ -53,6 +53,7 @@ namespace Food.WebApi
                 RequestPath = "/"+ Configuration.GetValue<string>("Folders:ImagesUrl")
             });
 
+
             app.UseRouting();
 
             app.UseAuthorization();
