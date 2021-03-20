@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Food.Domain\Food.Domain.csproj" />
+    <ProjectReference Include="..\Food.EFData\Food.EFData.csproj" />
+  </ItemGroup>
+
 </Project>
