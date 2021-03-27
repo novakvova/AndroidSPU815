@@ -1,4 +1,4 @@
-package com.example.myapp;
+package com.example.myapp.network.account.dto;
 
 public class LoginDto {
     private String email;
