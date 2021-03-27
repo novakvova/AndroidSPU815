@@ -10,9 +10,15 @@ import android.view.View;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.myapp.constants.Urls;
 import com.example.myapp.network.ImageRequester;
+import com.example.myapp.network.account.AccountService;
 import com.example.myapp.network.account.dto.LoginDto;
+import com.example.myapp.network.account.dto.LoginResultDto;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,12 +46,42 @@ public class MainActivity extends AppCompatActivity {
         LoginDto dto = new LoginDto(email.getText().toString(),
                 password.getText().toString());
 
-        if(dto.getEmail().isEmpty())
-        {
-            emailLayout.setError("Вкажіть пошту!");
-        }
-        else
-            emailLayout.setError("");
-        Log.d("btnLogin", email.getText().toString());
+//        if(dto.getEmail().isEmpty())
+//        {
+//            emailLayout.setError("Вкажіть пошту!");
+//        }
+//        else
+//            emailLayout.setError("");
+//        Log.d("btnLogin", email.getText().toString());
+
+        AccountService.getInstance()
+                .getJSONApi()
+                .login(dto)
+                .enqueue(new Callback<LoginResultDto>() {
+                    @Override
+                    public void onResponse(Call<LoginResultDto> call, Response<LoginResultDto> response) {
+                        if(response.isSuccessful())
+                        {
+
+                        }
+                        else
+                        {
+                            try {
+                                String json = response.errorBody().string();
+                                Log.d("error info", json);
+                            }catch(Exception ex) {
+                                Log.e("errorRead", "Error read json");
+                            }
+
+                        }
+                        //Log.d("request", "IS GOOD");
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginResultDto> call, Throwable t) {
+                        Log.d("request", "IS Problem");
+                    }
+                });
+
     }
 }
