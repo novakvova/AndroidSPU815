@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Food.Application.Account.Login;
+using Food.Application.Account.Registration;
 using Food.Application.Interfaces;
 using Food.Domain;
 using Food.EFData;
@@ -61,6 +62,7 @@ namespace Food.WebApi
                 .AddFluentValidation();
 
             services.AddTransient<IValidator<LoginQuery>, LoginQueryValidation>();
+            services.AddTransient<IValidator<RegistrationCommand>, RegistrationValidation>();
 
             services.TryAddSingleton<ISystemClock, SystemClock>();
 
