@@ -139,7 +139,7 @@ namespace Food.WebApi
                 RequestPath = "/"+ Configuration.GetValue<string>("Folders:ImagesUrl")
             });
 
-
+            app.AppySeeder();
             //app.UseRouting();
 
             app.UseAuthorization();
