@@ -24,6 +24,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -66,23 +67,52 @@ namespace Food.WebApi
 
             services.TryAddSingleton<ISystemClock, SystemClock>();
 
-            var builder = services.AddIdentityCore<AppUser>();
-            var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
-            identityBuilder.AddEntityFrameworkStores<DataContext>();
-            identityBuilder.AddSignInManager<SignInManager<AppUser>>();
+
+            services.AddIdentity<AppUser, AppRole>(options => options.Stores.MaxLengthForKeys = 128)
+               .AddEntityFrameworkStores<DataContext>()
+               .AddDefaultTokenProviders();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-                opt =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    opt.TokenValidationParameters = new TokenValidationParameters
+                    IssuerSigningKey = key,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Food.WebApi", Version = "v1" });
+                c.AddSecurityDefinition("Bearer",
+                    new OpenApiSecurityScheme
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = key,
-                        ValidateAudience = false,
-                        ValidateIssuer = false,
-                    };
+                        Description = "JWT Authorization header using the Bearer scheme.",
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer"
+                    });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme{
+                            Reference = new OpenApiReference{
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },new List<string>()
+                    }
                 });
+            });
 
             services.AddScoped<IJwtGenerator, JwtGenerator>();
         }
@@ -93,6 +123,8 @@ namespace Food.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Iphone.WebApi v1"));
             }
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
