@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Food.WebApi.Controllers
@@ -17,12 +18,14 @@ namespace Food.WebApi.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserViewModel>> LoginAsync(LoginQuery query)
         {
+            Thread.Sleep(5000);
             return await Mediator.Send(query);
         }
 
         [HttpPost("registration")]
         public async Task<ActionResult<UserViewModel>> RegistrationAsync(RegistrationCommand command)
         {
+            Thread.Sleep(5000);
             return await Mediator.Send(command);
         }
     }
