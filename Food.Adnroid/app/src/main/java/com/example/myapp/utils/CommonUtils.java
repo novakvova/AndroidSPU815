@@ -15,8 +15,8 @@ public class CommonUtils {
     private CommonUtils() {
 
     }
-    public static ProgressDialog showLoading() {
-        progressDialog = new ProgressDialog(HomeApplication.getAppContext());
+    public static ProgressDialog showLoading(Context context) {
+        progressDialog = new ProgressDialog(context);
         progressDialog.show();
         if(progressDialog.getWindow()!=null)
             progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

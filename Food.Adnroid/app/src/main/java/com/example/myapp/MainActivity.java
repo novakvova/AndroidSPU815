@@ -16,6 +16,7 @@ import com.example.myapp.network.ImageRequester;
 import com.example.myapp.network.account.AccountService;
 import com.example.myapp.network.account.dto.LoginDto;
 import com.example.myapp.network.account.dto.LoginResultDto;
+import com.example.myapp.security.JwtSecurityService;
 import com.example.myapp.utils.CommonUtils;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         LoginDto dto = new LoginDto(email.getText().toString(),
                 password.getText().toString());
-        CommonUtils.showLoading();
+        CommonUtils.showLoading(this);
         AccountService.getInstance()
                 .getJSONApi()
                 .login(dto)
@@ -66,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
                         txError.setText("");
                         if(response.isSuccessful())
                         {
+                            LoginResultDto result = response.body();
+                            JwtSecurityService jwtService = HomeApplication.getInstance();
+                            jwtService.saveJwtToken(result.getToken());
                             Intent intent = new Intent(HomeApplication.getAppContext(),
                                     ProfileActivity.class);
                             startActivity(intent);
