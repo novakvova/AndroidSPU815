@@ -31,7 +31,7 @@ namespace Food.Application.User.Profile
             {
                 DisplayName = user.DisplayName,
                 UserName = user.UserName,
-                Image = "1.jpg",
+                Image = user.Image ?? "1.jpg",
             };
         }
     }
