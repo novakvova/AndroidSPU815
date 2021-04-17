@@ -42,7 +42,9 @@ namespace Food.Application.User.Profile
 
 			using (var stream = new MemoryStream(binData))
 			{
-				var filepath = $"{request.UserName}{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.jpg";
+				var filepath = user.Image;
+				if (filepath == null)
+					filepath = $"{Path.GetRandomFileName()}.jpg";
 				var image = Bitmap.FromStream(stream);
 				string dir = Path.Combine(Directory.GetCurrentDirectory(), _configuration.GetValue<string>("Folders:Images"));
 				image.Save(Path.Combine(dir, filepath));
