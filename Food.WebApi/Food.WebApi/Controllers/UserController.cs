@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Food.WebApi.Controllers
 {
+    [Authorize]
     public class UserController : BaseController
     {
         [HttpGet("profile")]
-        [Authorize]
         public async Task<ActionResult<UserViewModel>> ProfileAsync()
         {
             UserProfileCommand userCommand = new UserProfileCommand
@@ -22,6 +22,14 @@ namespace Food.WebApi.Controllers
             };
 
             return await Mediator.Send(userCommand);
+        }
+        [HttpPost("change-image")]
+        public async Task<ActionResult<UserViewModel>> UsersAsync(ChangeImageCommand command)
+        {
+            command.UserName = User.Claims
+                .FirstOrDefault(x => x.Type == "username").Value;
+
+            return await Mediator.Send(command);
         }
     }
 }

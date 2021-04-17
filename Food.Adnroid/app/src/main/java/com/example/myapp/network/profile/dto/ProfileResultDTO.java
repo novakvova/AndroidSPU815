@@ -2,6 +2,7 @@ package com.example.myapp.network.profile.dto;
 
 public class ProfileResultDTO {
     private String userName;
+    private String displayName;
     private String image;
 
     public String getUserName() {
@@ -18,5 +19,13 @@ public class ProfileResultDTO {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

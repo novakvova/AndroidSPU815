@@ -3,6 +3,7 @@ using Food.Application.Exceptions;
 using Food.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -34,5 +35,7 @@ namespace Food.Application.User.Profile
                 Image = user.Image ?? "1.jpg",
             };
         }
+
+
     }
 }

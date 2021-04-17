@@ -2,9 +2,16 @@ package com.example.myapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
+import com.example.myapp.constants.Urls;
+import com.example.myapp.network.CircularNetworkImageView;
+import com.example.myapp.network.ImageRequester;
 import com.example.myapp.network.profile.ApiWebService;
 import com.example.myapp.network.profile.dto.ProfileResultDTO;
 import com.example.myapp.utils.CommonUtils;
@@ -14,11 +21,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
+    private ImageRequester imageRequester;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        final TextView email = findViewById(R.id.email);
+        final TextView displayName = findViewById(R.id.displayName);
+        final CircularNetworkImageView photo = findViewById(R.id.profile_image);
+        imageRequester = ImageRequester.getInstance();
+
         CommonUtils.showLoading(this);
         ApiWebService.getInstance()
                 .getJSONApi()
@@ -32,14 +46,14 @@ public class ProfileActivity extends AppCompatActivity {
                         {
                             ProfileResultDTO result = response.body();
                             String image = result.getImage();
-//                            String url = Urls.BASE+"/images/" + image;
-//
-//                            email.setText(result.getEmail());
-//                            imageRequester.setImageFromUrl(imageView, url);
-//                            name.setText(result.getUserName());
-//                            phone.setText(result.getPhone());
+                            String url = Urls.BASE + "/images/" + image;
 
-//                            Log.d("Good Request", result.getToken());
+                            Log.d("[GOT PROFILE]: ", "UserName: " + result.getUserName());
+
+
+                            email.setText(result.getUserName());
+                            displayName.setText(result.getDisplayName());
+                            imageRequester.setImageFromUrl(photo, url);
                         }
                         else
                         {
@@ -55,4 +69,10 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public void SelectImage(View view) {
+        Intent intent = new Intent(this, ChangeImageActivity.class);
+        startActivity(intent);
+    }
+
 }
