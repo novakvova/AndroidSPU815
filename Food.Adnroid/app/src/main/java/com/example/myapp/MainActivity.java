@@ -125,4 +125,10 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
+
+    public void OnClickRecycler(View view) {
+        Intent intent = new Intent(HomeApplication.getAppContext(),
+                RecyclerActivity.class);
+        startActivity(intent);
+    }
 }
