@@ -16,6 +16,8 @@ import com.example.myapp.network.profile.ApiWebService;
 import com.example.myapp.network.profile.dto.ProfileResultDTO;
 import com.example.myapp.utils.CommonUtils;
 
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
                         {
                             ProfileResultDTO result = response.body();
                             String image = result.getImage();
-                            String url = Urls.BASE + "/images/" + image;
+                            int ticks = (int) (new Date().getTime()/1000);
+                            String url = Urls.BASE + "/images/" + image+"?data="+ticks;
 
                             Log.d("[GOT PROFILE]: ", "UserName: " + result.getUserName());
 
